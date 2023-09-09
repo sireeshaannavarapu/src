@@ -9,8 +9,9 @@ function Shoppingcart(){
         var items = res.data.map((y)=>{
           return {...y,IsProductInCart:false,count:0}
       });
-      setproducts(items)
-      })
+        setproducts(items)
+      });
+
     },[]);
    
     
@@ -19,7 +20,8 @@ function Shoppingcart(){
        temp[i].IsProductInCart=true;
        temp[i].count++;
        setcart([...cart,temp[i]])
-    }
+       
+    } 
     function inc(i){
       var temp=[...cart]
        temp[i].count++
@@ -29,11 +31,17 @@ function Shoppingcart(){
       var temp=[...cart]
        temp[i].count--
         setcart(temp)
+        
     }
-    function remove(ind){
+    function remove(b,ind){
         var temp=[...cart]
         temp.splice(ind,1)
         setcart(temp,ind)
+        var x=products.findIndex((c)=>{
+            return (c.id===b.id)
+        })
+        products[x].IsProductInCart=false;
+        products[x].count=0;
     }
     return(
         <div className="d-flex flex-wrap">
@@ -42,7 +50,7 @@ function Shoppingcart(){
             <ul className="d-flex flex-wrap">
             {
                 products.map((a,i)=>{
-                    return <div className="card shadow-lg p-3 rounded m-4 " style={{width: '14rem',backgroundColor:'purple'}}>
+                    return <div className="card shadow-lg p-3 rounded m-4 " style={{width: '14rem',backgroundColor:'lightpink'}}>
                     
                     <div className="card-body d-flex flex-column justify-content-between">
                         <img src={a.image} style={{height:'160px',width:'160px'}} alt="Card image cap"/>
@@ -50,7 +58,7 @@ function Shoppingcart(){
                         <p className="card-text">{a.price}</p>
                     <div>
                     
-                    <button  className="btn btn-success" onClick={()=>{addtocart(i)}}  disabled={a.IsProductInCart?true:false}>Add to cart</button>
+                    <button  className="btn btn-info" onClick={()=>{addtocart(i)}}  disabled={a.IsProductInCart?true:false}>Add to cart</button>
                       
                       
                     </div>
@@ -67,19 +75,17 @@ function Shoppingcart(){
 
                {
                 cart.length>0 && cart.map((b,ind)=>{
-                    return <div className="card shadow-lg  rounded  m-2 mb-4" style={{backgroundColor:'purple'}} >
+                    return <div className="card shadow-lg  rounded  m-2 mb-4" style={{backgroundColor:'lightpink'}} >
                        <div className="card-body d-flex justify-content-between" >
                             <center><img src={b.image} style={{height:'90px',width:'90px'}} alt="Card image cap"/></center>
                             <h5 className="card-title mb-5">{b.title}</h5>
                             <p className="card-text">${(b.count*b.price).toFixed(2)}</p></div>
                     <div><center style={{position:'absolute',bottom:'20px',left:'120px'}}>
-                    <button className="btn btn-success" onClick={()=>{dec(ind)}} disabled={b.count===1?true:false}>-</button>
+                    <button className="btn btn-info" onClick={()=>{dec(ind)}} disabled={b.count===1?true:false}>-</button>
                     <span>{b.count}</span>
-                    <button className="btn btn-success" onClick={()=>{inc(ind)}}>+</button>
-                    <button className="btn btn-danger" style={{position:'absolute',left:'100px'}} onClick={()=>{remove(ind)}}>Remove</button></center>
+                    <button className="btn btn-info" onClick={()=>{inc(ind)}}>+</button>
+                    <button className="btn btn-info" style={{position:'absolute',left:'100px'}} onClick={()=>{remove(b,ind)}}>Remove</button></center>
                     </div>
-                    
-                    
                     </div>
                     
                 })
